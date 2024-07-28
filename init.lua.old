@@ -1,0 +1,317 @@
+-------------------------------- Bootstrap -------------------------------------
+-- Install packer
+local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+local is_bootstrap = false
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  is_bootstrap = true
+  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+  vim.cmd [[packadd packer.nvim]]
+end
+
+---------------------------- Plugins Management --------------------------------
+-- stylua: ignore start
+require('packer').startup(function(use)
+  -- Packer itself
+  use 'wbthomason/packer.nvim'
+
+  -- themes
+  -- use 'navarasu/onedark.nvim'
+  use 'Mofiqul/vscode.nvim'
+
+  -- status line
+  use 'nvim-lualine/lualine.nvim'
+  use {
+    'romgrk/barbar.nvim',
+    requires = {'kyazdani42/nvim-web-devicons'}
+  }
+
+  -- terminal
+  use {"akinsho/toggleterm.nvim", tag = '*'}
+
+  -- Files 
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = { 'kyazdani42/nvim-web-devicons', }
+  }
+  
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.x',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
+
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = function() 
+      require('nvim-treesitter.install').update({ with_sync = true }) 
+    end,
+  }
+
+  -- code tools
+  use "terrortylor/nvim-comment"
+
+  -- completion support
+  use "hrsh7th/nvim-cmp"
+  use "hrsh7th/cmp-buffer"
+  use "amarakon/nvim-cmp-lua-latex-symbols"
+
+  -- REPL
+  -- use "jpalardy/vim-slime"
+  -- use {
+  --   "klafyvel/vim-slime-cells",
+  --   requires = { {"jpalardy/vim-slime" } }
+  -- }
+  -- use { 'hkupty/iron.nvim' }
+
+    -- Folding and Misc
+  use {
+    'kevinhwang91/nvim-ufo',
+    requires = 'kevinhwang91/promise-async'
+  }
+
+  if is_bootstrap then
+    require('packer').sync()
+  end
+end)
+-- stylua: ignore end
+
+-- When we are bootstrapping a configuration, it doesn't
+-- make sense to execute the rest of the init.lua.
+--
+-- You'll need to restart nvim, and then it will work.
+if is_bootstrap then
+  print '=================================='
+  print '    Plugins are being installed'
+  print '    Wait until Packer completes,'
+  print '       then restart nvim'
+  print '=================================='
+  return
+end
+
+---------------------------- General Settings ----------------------------------
+vim.o.number = true
+vim.o.wrap = false
+vim.o.syntax = 'on'
+vim.o.tabstop = 4
+vim.o.softtabstop = 0
+vim.o.expandtab = true
+vim.o.shiftwidth = 4
+vim.o.smarttab = true
+vim.o.autoindent = true
+vim.o.mouse = 'a'
+vim.o.hidden = true
+vim.o.termguicolors = true
+vim.o.relativenumber = true
+
+-- Code folding using nvim-treesitter
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = -1
+---------------------------------- Theming -------------------------------------
+-- require('onedark').setup {
+--   style = 'darker'
+-- }
+-- require('onedark').load()
+
+local c = require('vscode.colors').get_colors()
+require('vscode').setup({
+    -- Set style
+    style = 'light',
+
+    -- Enable transparent background
+    transparent = false,
+    -- transparent = true,
+
+    -- Enable italic comment
+    italic_comments = true,
+
+    -- Disable nvim-tree background color
+    disable_nvimtree_bg = true,
+
+    -- Override colors (see ./lua/vscode/colors.lua)
+    color_overrides = {
+        -- vscLineNumber = '#FFFFFF',
+        vscLineNumber = '#808080'
+    },
+
+    -- Override highlight groups (see ./lua/vscode/theme.lua)
+    group_overrides = {
+        -- this supports the same val table as vim.api.nvim_set_hl
+        -- use colors from this colorscheme by requiring vscode.colors!
+        Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
+    }
+})
+require('vscode').load()
+
+----------------------------- Plugin Settings ----------------------------------
+require('lualine').setup {
+    options = {
+        -- theme = 'auto'
+        theme = 'vscode'
+    },
+}
+
+
+-- Set barbar's options
+require'bufferline'.setup {
+  -- Enable/disable animations
+  animation = false,
+
+  -- Enable/disable auto-hiding the tab bar when there is a single buffer
+  auto_hide = false,
+
+  -- Enable/disable current/total tabpages indicator (top right corner)
+  tabpages = true,
+
+
+  -- Enable/disable icons
+  -- if set to 'numbers', will show buffer index in the tabline
+  -- if set to 'both', will show buffer index and icons in the tabline
+  -- icons = 'both',
+  icons = { buffer_index = true, filetype = { enabled = true } },
+
+  -- If set, the letters for each buffer in buffer-pick mode will be
+  -- assigned based on their name. Otherwise or in case all letters are
+  -- already assigned, the behavior is to assign letters in order of
+  -- usability (see order below)
+  semantic_letters = true,
+
+  -- New buffer letters are assigned in this order. This order is
+  -- optimal for the qwerty keyboard layout but might need adjustement
+  -- for other layouts.
+  letters = 'asdfjkl;ghnmxcvbziowerutyqpASDFJKLGHNMXCVBZIOWERUTYQP',
+
+}
+-- end of barbar options
+
+--- File explorer
+require("nvim-tree").setup({
+    git = {
+        ignore = true
+    }
+})
+
+--- Terminal
+require('toggleterm').setup({
+  size = function(term)
+    if term.direction == "horizontal" then
+      return 12
+    elseif term.direction == "vertical" then
+      return vim.o.columns * 0.40
+    else
+      return 12
+    end
+  end,
+  on_open = function(term)
+      vim.cmd('startinsert')
+  end,
+})
+
+--- Completion settings
+local cmp = require("cmp")
+cmp.setup({
+    mapping = {
+      ["<C-Space>"] = cmp.mapping.complete(),
+      ["<C-e>"] = cmp.mapping.close(),
+      ["<CR>"] = cmp.mapping.confirm({
+         behavior = cmp.ConfirmBehavior.Replace,
+         select = true,
+      }),
+      ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "s" }),
+      ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "s" }),
+   },
+   sources = {
+        { name = "lua-latex-symbols", option = { cache = true } },
+        { name = "buffer" }
+    }
+})
+
+--- Comment
+require('nvim_comment').setup()
+
+-- -- Iron REPL
+-- local iron = require("iron.core")
+-- iron.setup {
+--   config = {
+--     scratch_repl = true,
+--     repl_definition = {
+--       sh = {
+--         command = {"zsh"}
+--       },
+--       julia = {
+--         command = {"julia", "--banner=no", "--project=@."},
+--       }
+--     },
+--     repl_open_cmd = require('iron.view').right("40%"),
+--   },
+--   keymaps = {
+--     send_motion = "<space>sc",
+--     visual_send = "<space>sc",
+--     send_file = "<space>sf",
+--     send_line = "<space>sl",
+--     cr = "<space>s<cr>",
+--     interrupt = "<space>s<space>",
+--     exit = "<space>sq",
+--     clear = "<space>cl",
+--   },
+--   highlight = {
+--     italic = true
+--   },
+--   ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
+-- }
+
+-- nvim-ufo
+require('ufo').setup({
+    provider_selector = function(bufnr, filetype, buftype)
+        return {'treesitter', 'indent'}
+    end,
+    close_fold_kinds = { 'imports', 'comment' }
+})
+
+----------------------------- Keymappings --------------------------------------
+vim.keymap.set('', '<C-n>', ':NvimTreeToggle<CR>')
+vim.keymap.set('', '<C-p>', ':Telescope find_files theme=dropdown previewer=false<CR>')
+vim.keymap.set('', '<C-b>', ':Telescope buffers theme=dropdown previewer=false<CR>')
+vim.keymap.set('', '<C-t>', ':ToggleTerm direction=float<CR>')
+vim.keymap.set('t', '<esc>', [[<C-\><C-n><Cmd>:ToggleTerm<CR>]])
+-- -- Iron REPL
+-- vim.keymap.set('n', '<space>rs', '<cmd>IronRepl<cr>')
+-- vim.keymap.set('n', '<space>rr', '<cmd>IronRestart<cr>')
+-- vim.keymap.set('n', '<space>rf', '<cmd>IronFocus<cr>')
+-- vim.keymap.set('n', '<space>rh', '<cmd>IronHide<cr>')
+
+-------------------------- Custom functions ------------------------------------
+-- -- Send a Cell via Iron
+-- IronSendCell = function()
+--   local iron_core = require('iron.core')  
+--   local marks = require('iron.marks')
+--  
+--   local cell_pattern = "^\\s*##"  -- cell delimiter pattern
+--   local cell_start = vim.fn.search(cell_pattern, 'bcnW')
+--   local cell_end = vim.fn.search(cell_pattern, 'nW')
+--
+--   local lines = vim.api.nvim_buf_get_lines(0, cell_start, cell_end-1, 0)
+--   -- ignore blank lines
+--   local b_lines = {}
+--   for i, line in ipairs(lines) do
+--     if line:gsub("^%s*(.-)%s*$", "%1") ~= '' then
+--       table.insert(b_lines, line)
+--     end
+--   end
+--   if #b_lines == 0 then return end
+--  
+--   if cell_start == 0 then
+--     cell_start = 1 -- if first cell, then start from first line
+--   end
+--   if cell_end == 0 then
+--     cell_end = vim.fn.line('$') -- set to last line
+--   end
+--
+--   marks.set{ from_line=cell_start, from_col=0, to_line=cell_end, to_col=-1 }
+--   marks.winrestview()
+--  
+--   iron_core.send(nil, b_lines)
+--   vim.fn.cursor(cell_end+1, 0) -- move to next cell start
+-- end
+-- -- Bind to Alt+Enter
+-- vim.keymap.set('', '<M-Enter>', IronSendCell)
