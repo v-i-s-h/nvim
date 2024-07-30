@@ -3,7 +3,7 @@ local M = {
     dependencies = {
         "kevinhwang91/promise-async"
     },
-    enabled = vim.g.os ~= "Windows",
+    -- enabled = vim.g.os ~= "Windows",
     lazy = false,
     opts = {
         provider_selector = function(bufnr, filetype, buftype)
