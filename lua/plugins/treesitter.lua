@@ -1,6 +1,6 @@
 local M = {
   "nvim-treesitter/nvim-treesitter",
-  enabled = vim.g.os ~= "Windows",
+  -- enabled = vim.g.os ~= "Windows",
   lazy = false,
   build = function()
       require("nvim-treesitter.install").update({ with_sync = true })()
@@ -12,7 +12,7 @@ local M = {
       ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "python", "javascript", "html" },
       sync_install = false,
       highlight = { enable = true },
-      indent = { enable = true },  
+      indent = { enable = true },
     })
   end
 }
