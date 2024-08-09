@@ -1,8 +1,9 @@
 local M = {
     "hrsh7th/nvim-cmp",
+    -- enabled = false,
     event = "InsertEnter",
     dependencies = {
-        {"L3MON4D3/LuaSnip"}
+        "L3MON4D3/LuaSnip"
     },
     config = function()
         local cmp = require("cmp")
@@ -26,4 +27,3 @@ local M = {
 }
 
 return M
-

@@ -1,20 +1,19 @@
 local M = {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
+    -- enabled = false,
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      "MunifTanjim/nui.nvim",
-      -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+        "nvim-lua/plenary.nvim",
+        "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+        "MunifTanjim/nui.nvim",
+        -- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
     },
     lazy = false,
-    opts = function ()
-      return {
+    opt = {
         window = {
-          width = 30
+            width = 30
         }
-      }
-    end
+    }
 }
 
 return M

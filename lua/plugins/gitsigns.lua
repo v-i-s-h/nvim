@@ -1,5 +1,6 @@
 local M = {
     "lewis6991/gitsigns.nvim",
+    -- enabled = false,
     event = "BufReadPre",
     opts = {
         -- current_line_blame = true,
@@ -15,10 +16,13 @@ local M = {
         -- current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
         current_line_blame_formatter = "<author>, <author_time:%R> - <summary>",
         signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-        numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
-        linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+        numhl = false,     -- Toggle with `:Gitsigns toggle_numhl`
+        linehl = false,    -- Toggle with `:Gitsigns toggle_linehl`
         word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
-        watch_gitdir = { interval = 1000, follow_files = true },
+        watch_gitdir = {
+            interval = 1000,
+            follow_files = true
+        },
         attach_to_untracked = true,
         sign_priority = 6,
         update_debounce = 100,
