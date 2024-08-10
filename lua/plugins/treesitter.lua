@@ -1,6 +1,6 @@
 local M = {
     "nvim-treesitter/nvim-treesitter",
-    enabled = false,
+    -- enabled = false,
     -- enabled = vim.g.os ~= "Windows",
     lazy = false,
     build = function()

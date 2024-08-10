@@ -5,7 +5,10 @@ local M = {
     dependencies = {
         "kevinhwang91/promise-async"
     },
-    lazy = false,
+    -- lazy = false,
+    event = {
+        "BufReadPre", "BufNewFile"
+    },
     opts = {
         provider_selector = function(bufnr, filetype, buftype)
             return { 'treesitter', 'indent' }
