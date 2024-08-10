@@ -1,5 +1,5 @@
 -- General key maps
-vim.keymap.set('', '<C-n>', '<cmd>Neotree toggle<CR>')
+vim.keymap.set('', '<C-n>', '<cmd>Neotree reveal<CR>')
 
 vim.keymap.set('', '<C-t>', '<cmd>ToggleTerm direction=float<CR>')
 vim.keymap.set('t', '<esc>', [[<C-\><C-n><cmd>ToggleTerm<CR>]])
