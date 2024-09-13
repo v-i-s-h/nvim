@@ -7,13 +7,15 @@ local M = {
     },
     -- lazy = false,
     event = {
-        "BufReadPre", "BufNewFile"
+        "BufReadPre", "BufNewFile", "BufEnter",
     },
     opts = {
         provider_selector = function(bufnr, filetype, buftype)
             return { 'treesitter', 'indent' }
         end,
-        close_fold_kinds_for_ft = { 'imports', 'comment' }
+        close_fold_kinds_for_ft = { 
+            lua = { 'imports', 'comment' }
+        }
     }
 }
 
