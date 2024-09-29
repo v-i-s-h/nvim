@@ -1,13 +1,13 @@
 local M = {
     "williamboman/mason.nvim",
     -- enabled = false,
-    -- cmd = {
-    --   "Mason",
-    --   "MasonInstall",
-    --   "MasonUninstall",
-    --   "MasonUninstallAll",
-    --   "MasonLog",
-    -- },
+    cmd = {
+      "Mason",
+      "MasonInstall",
+      "MasonUninstall",
+      "MasonUninstallAll",
+      "MasonLog",
+    },
     opts = {
         ui = {
             icons = {
